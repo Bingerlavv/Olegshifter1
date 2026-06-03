@@ -1,0 +1,19 @@
+# Go
+gocore/olegcore
+gocore/*.exe
+
+# gomobile output
+app/app/libs/*.aar
+app/app/libs/*.jar
+
+# Gradle / Android Studio
+app/.gradle/
+app/build/
+app/app/build/
+app/local.properties
+app/.idea/
+app/gradle/
+app/gradlew
+app/gradlew.bat
+*.keystore
+*.jks

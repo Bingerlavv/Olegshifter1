@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package olegshifter;
+
+// Двунаправленный поток зашифрованных пакетов.
+// Клиент открывает Stream() и шлёт туда Packet'ы, сервер отвечает
+// Packet'ами. Всё что лежит в Packet.data — уже зашифровано слоем
+// ChannelManager/CryptoSession.
+service Tunnel {
+    rpc Stream(stream Packet) returns (stream Packet);
+}
+
+message Packet {
+    bytes data = 1;
+}

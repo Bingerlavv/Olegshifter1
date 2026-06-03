@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OlegShifter</string>
+    <string name="channel_name">Состояние прокси</string>
+
+    <string name="host">Сервер (host)</string>
+    <string name="base_port">Базовый WS-порт</string>
+    <string name="channels">Каналов (WS)</string>
+    <string name="socks_port">Локальный SOCKS5 порт</string>
+    <string name="preshared">Общий секрет (preshared)</string>
+    <string name="use_tls">Использовать TLS (wss)</string>
+    <string name="tls_insecure">Не проверять сертификат (dev)</string>
+    <string name="vpn_mode">Системный VPN (весь трафик телефона)</string>
+
+    <string name="connect">Подключиться</string>
+    <string name="disconnect">Отключиться</string>
+    <string name="status_disconnected">Отключено</string>
+    <string name="status_connecting">Подключение…</string>
+    <string name="status_connected">Подключено</string>
+    <string name="status_error">Ошибка</string>
+</resources>

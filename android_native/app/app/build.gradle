@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'org.olegshifter.client'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'org.olegshifter.client'
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildTypes {
+        release {
+            // Для подписи Play Store см. BUILD.md (keystore + signingConfig).
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // Go-ядро (olegcore.aar кладётся в app/libs/ после `gomobile bind`).
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'])
+
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // --- Монетизация (опционально) ---
+    // Раскомментируй и добавь свой AdMob App ID в AndroidManifest (см. BUILD.md):
+    // implementation 'com.google.android.gms:play-services-ads:23.2.0'
+    // Биллинг (покупки/подписки):
+    // implementation 'com.android.billingclient:billing-ktx:7.0.0'
+}
