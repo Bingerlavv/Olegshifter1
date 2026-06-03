@@ -23,7 +23,7 @@ Go-ядро уже проверено end-to-end против Python-серве�
 
 | Инструмент | Версия | Зачем |
 |---|---|---|
-| Go | **1.23+** | компиляция ядра (gvisor/tun2socks требуют 1.23) |
+| Go | **1.25+** | компиляция ядра (golang.org/x/mobile требует 1.25) |
 | gomobile | latest | Go → Android `.aar` |
 | Android SDK | platform 34 | сборка APK |
 | Android NDK | r25c+ | компиляция Go под Android |
@@ -137,6 +137,7 @@ c.isRunning
 | Симптом | Причина / решение |
 |---|---|
 | `gomobile: command not found` | `export PATH="$PATH:$(go env GOPATH)/bin"` |
+| `missing golang.org/x/mobile dependency` | уже починено: `gocore/tools.go` держит x/mobile в go.mod. Если правил руками — верни файл и сделай `go mod tidy` |
 | `no Android NDK found` | поставь NDK и `export ANDROID_NDK_HOME=...`, затем `gomobile init` |
 | `olegcore.aar (No such file)` | сначала шаг B3 (bind), потом Gradle |
 | APK ставится, но не коннектит | проверь host/port/preshared (совпадает с сервером), TLS-флаг |
