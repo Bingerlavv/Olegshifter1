@@ -102,6 +102,7 @@ func (s *socks5Server) acceptLoop() {
 
 func (s *socks5Server) handleConn(conn net.Conn) {
 	defer conn.Close()
+	defer recoverLogf(s.mgr.logf, "socks handleConn")
 
 	// 1. Greeting: [ver][nmethods][methods...]
 	head := make([]byte, 2)

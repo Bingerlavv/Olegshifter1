@@ -136,6 +136,7 @@ func (m *manager) startRecvLoop(chID int, t *wsTransport) {
 
 func (m *manager) recvLoop(chID int, t *wsTransport) {
 	defer m.wg.Done()
+	defer recoverLogf(m.logf, "recvLoop")
 	for m.running {
 		packet, err := t.recv()
 		if err != nil {
@@ -176,6 +177,7 @@ func (m *manager) processIncoming(chID int, packet []byte) {
 
 func (m *manager) pingLoop() {
 	defer m.wg.Done()
+	defer recoverLogf(m.logf, "pingLoop")
 	ticker := time.NewTicker(pingIntervalSec * time.Second)
 	defer ticker.Stop()
 	for {
@@ -230,6 +232,7 @@ func (m *manager) triggerReconnect(chID int) {
 
 func (m *manager) reconnectLoop(chID int) {
 	defer m.wg.Done()
+	defer recoverLogf(m.logf, "reconnectLoop")
 	defer func() {
 		m.mu.Lock()
 		m.reconnecting[chID] = false

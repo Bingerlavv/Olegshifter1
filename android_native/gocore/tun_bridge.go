@@ -77,6 +77,7 @@ func (b *tunBridge) stop() {
 
 func (b *tunBridge) HandleTCP(conn adapter.TCPConn) {
 	defer conn.Close()
+	defer recoverLogf(b.logf, "HandleTCP")
 	id := conn.ID()
 	dstIP := ipFromAddress(id.LocalAddress)
 	if dstIP == nil {
@@ -93,6 +94,7 @@ func (b *tunBridge) HandleTCP(conn adapter.TCPConn) {
 
 func (b *tunBridge) HandleUDP(conn adapter.UDPConn) {
 	defer conn.Close()
+	defer recoverLogf(b.logf, "HandleUDP")
 	id := conn.ID()
 	if id.LocalPort != 53 {
 		return // не-DNS UDP не поддерживается TCP-only прокси

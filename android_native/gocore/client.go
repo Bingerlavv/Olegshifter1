@@ -23,6 +23,14 @@ type Logger interface {
 	Log(line string)
 }
 
+// recoverLogf перехватывает panic в горутине и пишет её в лог вместо краша
+// всего приложения (Go-паника в нативной либе иначе убивает процесс).
+func recoverLogf(logf func(string), where string) {
+	if r := recover(); r != nil && logf != nil {
+		logf(fmt.Sprintf("PANIC в %s: %v", where, r))
+	}
+}
+
 // tunController управляет VPN-мостом (реализация платформозависима).
 type tunController interface {
 	stop()
@@ -62,7 +70,12 @@ func (c *Client) Start(
 	socksHost string, socksPort int,
 	preshared string, useTLS bool, tlsInsecure bool, sni string,
 	logger Logger,
-) error {
+) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic в Start: %v", r)
+		}
+	}()
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.running {
@@ -145,7 +158,12 @@ func (c *Client) Start(
 // StartTun включает VPN-режим: весь трафic из TUN-устройства (fd от Android
 // VpnService) идёт через локальный SOCKS5. Вызывать после Start().
 // Только Android: на десктопе вернёт ошибку.
-func (c *Client) StartTun(fd int, mtu int) error {
+func (c *Client) StartTun(fd int, mtu int) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic в StartTun: %v", r)
+		}
+	}()
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if !c.running {
