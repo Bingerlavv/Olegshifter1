@@ -69,8 +69,10 @@ object Engine {
                 )
                 client = c
                 setStatus(Status.CONNECTED)
-            } catch (e: Exception) {
-                appendLog("ОШИБКА: ${e.message}")
+            } catch (e: Throwable) {
+                // Throwable, а не Exception: UnsatisfiedLinkError/NoClassDefFoundError
+                // при загрузке Go-библиотеки — это Error, и Exception его не ловит.
+                appendLog("ОШИБКА: ${e.javaClass.simpleName}: ${e.message}")
                 setStatus(Status.ERROR)
             }
         }

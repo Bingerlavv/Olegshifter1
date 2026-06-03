@@ -22,7 +22,11 @@ class MainActivity : AppCompatActivity(), Engine.Listener {
     private val vpnPrepareLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
             if (res.resultCode == Activity.RESULT_OK) {
-                OlegVpnService.start(this)
+                try {
+                    OlegVpnService.start(this)
+                } catch (t: Throwable) {
+                    Engine.appendLogPublic("VPN старт упал: ${t.javaClass.simpleName}: ${t.message}")
+                }
             } else {
                 Engine.appendLogPublic("VPN: разрешение не выдано")
             }
@@ -37,14 +41,18 @@ class MainActivity : AppCompatActivity(), Engine.Listener {
         maybeRequestNotifPermission()
 
         b.connectButton.setOnClickListener {
-            if (Engine.isConnected() || Engine.status == Engine.Status.CONNECTING) {
-                // Гасим тот сервис, что был запущен (режим запомнен в Prefs).
-                if (Prefs.load(this).vpnMode) OlegVpnService.stop(this)
-                else ProxyService.stop(this)
-            } else {
-                val cfg = readFromUi()
-                Prefs.save(this, cfg)
-                if (cfg.vpnMode) prepareAndStartVpn() else ProxyService.start(this)
+            try {
+                if (Engine.isConnected() || Engine.status == Engine.Status.CONNECTING) {
+                    // Гасим тот сервис, что был запущен (режим запомнен в Prefs).
+                    if (Prefs.load(this).vpnMode) OlegVpnService.stop(this)
+                    else ProxyService.stop(this)
+                } else {
+                    val cfg = readFromUi()
+                    Prefs.save(this, cfg)
+                    if (cfg.vpnMode) prepareAndStartVpn() else ProxyService.start(this)
+                }
+            } catch (t: Throwable) {
+                Engine.appendLogPublic("Ошибка запуска: ${t.javaClass.simpleName}: ${t.message}")
             }
         }
 

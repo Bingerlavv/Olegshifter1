@@ -52,7 +52,11 @@ class ProxyService : Service(), Engine.Listener {
                 return START_NOT_STICKY
             }
             else -> {
-                startForeground(NOTIF_ID, buildNotification(getString(R.string.status_connecting)))
+                try {
+                    startForeground(NOTIF_ID, buildNotification(getString(R.string.status_connecting)))
+                } catch (t: Throwable) {
+                    Engine.appendLogPublic("startForeground упал: ${t.javaClass.simpleName}: ${t.message}")
+                }
                 Engine.connect(Prefs.load(this))
             }
         }
